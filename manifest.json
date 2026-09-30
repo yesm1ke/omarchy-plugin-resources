@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.yesm1ke.resources",
+  "name": "Resources",
+  "version": "1.0.0",
+  "author": "yesm1ke",
+  "description": "Compact CPU / RAM / GPU usage indicator",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Resources.qml"
+  },
+  "barWidget": {
+    "displayName": "Resources",
+    "description": "Compact CPU / RAM / GPU usage indicator",
+    "category": "System",
+    "allowMultiple": false
+  }
+}
