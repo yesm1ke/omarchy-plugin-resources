@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "id": "io.github.yesm1ke.resources",
   "name": "Resources",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "yesm1ke",
-  "description": "Compact CPU / RAM / GPU usage indicator",
+  "description": "Four tiny CPU, RAM, GPU and disk meters in the bar that turn urgent when the machine gets busy; hover for numbers, click for btop.",
   "kinds": [
     "bar-widget"
   ],
@@ -13,7 +13,7 @@
   },
   "barWidget": {
     "displayName": "Resources",
-    "description": "Compact CPU / RAM / GPU usage indicator",
+    "description": "Compact CPU / RAM / GPU / disk usage meters",
     "category": "System",
     "allowMultiple": false
   }

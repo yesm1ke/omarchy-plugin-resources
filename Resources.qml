@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Commons
+import qs.Commons as Commons
 import qs.Ui
 
 // Compact CPU / RAM / GPU / disk usage meters, polled every 2s. Exact values
@@ -30,8 +31,8 @@ BarWidget {
   readonly property int cpuHotSamples: 3
   property int cpuHotStreak: 0
 
-  readonly property color meterColor: bar ? bar.barForeground : Color.foreground
-  readonly property color urgentColor: bar ? bar.urgent : Color.urgent
+  readonly property color meterColor: bar ? bar.barForeground : Commons.Color.foreground
+  readonly property color urgentColor: bar ? bar.urgent : Commons.Color.urgent
 
   readonly property var meters: [
     { name: "CPU", value: cpuPercent, hot: cpuHotStreak >= cpuHotSamples, shown: true },

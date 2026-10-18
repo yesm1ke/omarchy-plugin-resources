@@ -51,6 +51,24 @@ omarchy bar move io.github.yesm1ke.resources --after omarchy.clock
 
 Update with `omarchy plugin update`.
 
+## Remove
+
+```sh
+omarchy plugin remove io.github.yesm1ke.resources
+```
+
+This takes the widget off the bar and deletes the plugin. It writes nothing
+else anywhere, so nothing is left behind.
+
+## Dependencies
+
+Nothing to install on Omarchy. It uses:
+
+- `free` (procps-ng) and `df` (coreutils), present on every Arch system;
+- `btop` for the click, which Omarchy ships;
+- `nvidia-smi`, from the NVIDIA driver, only for the GPU meter. Without it the
+  GPU meter is simply not shown.
+
 ## How it works
 
 Every two seconds one small shell command reads:
