@@ -11,7 +11,8 @@ glance how busy the machine is, in about the room of one icon.
 
 ![CPU load rising to 100 %, the CPU meter turning red after a few seconds, then everything settling again](docs/meters.gif)
 
-Each meter is a small track that fills from the bottom with the current usage.
+From left to right: CPU, RAM, GPU, disk. Each meter is a small track that
+fills from the bottom with the current usage.
 A meter turns to the theme's urgent colour (red above) when it crosses its
 threshold:
 
