@@ -1,5 +1,7 @@
 # Resources for the Omarchy bar
 
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/mike_g)
+
 Compact CPU, RAM, GPU and root-filesystem disk meters in the Omarchy bar, polled every two
 seconds. Exact values are in the hover tooltip; a click opens Activity
 (`btop`). A meter turns to the urgent colour at a threshold (CPU 80 % held for
