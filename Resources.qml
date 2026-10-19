@@ -64,11 +64,42 @@ BarWidget {
     root.prevIdle = idle
   }
 
+  // GPU: holds one utilisation reading or nothing. Only a whole number from 0
+  // to 100 counts; anything else hides the meter and zeroes it, so it never
+  // shows a stale or made-up value.
+  function parseGpu(line) {
+    var text = (line || "").trim()
+    var valid = /^[0-9]+$/.test(text) && Number(text) <= 100
+    root.gpuAvailable = valid
+    root.gpuPercent = valid ? Number(text) : 0
+  }
+
   Process {
     id: statsProc
     // Each line is tagged (CPU:/MEM:/GPU:/DISK:) rather than read by position,
-    // so a missing nvidia-smi (no GPU, driver down) can't shift later fields.
-    command: ["sh", "-c", "echo \"CPU:$(head -1 /proc/stat)\"; echo \"MEM:$(free -b | awk 'NR==2{print $3, $2}')\"; echo \"GPU:$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null)\"; echo \"DISK:$(df --output=pcent / | tail -1)\""]
+    // so a missing GPU reading can't shift later fields. GPU: is the first AMD
+    // card, in glob order, whose gpu_busy_percent holds a whole percentage
+    // (connectors like card1-DP-1 are not cards), else NVIDIA GPU 0's answer
+    // on one line for parseGpu to judge, else empty. This is a JS template
+    // string: keep ${, \ and backticks out of the script.
+    command: ["sh", "-c", `
+      gpu() {
+        drm=/sys/class/drm
+        for card in "$drm"/card*; do
+          case $card in "$drm"/card | "$drm"/card*[!0-9]*) continue ;; esac
+          [ "$(cat "$card/device/vendor")" = 0x1002 ] || continue
+          busy=$(cat "$card/device/gpu_busy_percent") || continue
+          case $busy in '' | *[!0-9]*) continue ;; esac
+          [ "$busy" -le 100 ] && echo "$busy" && return
+        done
+        busy=$(nvidia-smi --id=0 --query-gpu=utilization.gpu --format=csv,noheader,nounits) &&
+          printf %s "$busy" | tr '[:space:]' ' '
+      } 2>/dev/null
+      echo "CPU:$(head -1 /proc/stat)"
+      echo "MEM:$(free -b | awk 'NR==2{print $3, $2}')"
+      echo "GPU:$(gpu)"
+      echo "DISK:$(df --output=pcent / | tail -1)"
+    `]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
@@ -85,13 +116,7 @@ BarWidget {
           if (mem.length === 2 && mem[1] > 0) root.ramPercent = 100 * mem[0] / mem[1]
         }
 
-        var gpuLine = fields.GPU !== undefined ? fields.GPU.trim() : ""
-        if (gpuLine !== "") {
-          root.gpuAvailable = true
-          root.gpuPercent = Number(gpuLine)
-        } else {
-          root.gpuAvailable = false
-        }
+        root.parseGpu(fields.GPU)
 
         if (fields.DISK) {
           var diskLine = fields.DISK.trim().replace("%", "")
